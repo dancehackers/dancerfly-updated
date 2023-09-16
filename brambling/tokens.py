@@ -61,7 +61,7 @@ class BaseTokenGenerator(object):
             six.text_type(instance.pk),
             six.text_type(num_days)
         )
-        value = u"".join(default_state + tuple(self._instance_state(instance)))
+        value = "".join(default_state + tuple(self._instance_state(instance)))
 
         hash = salted_hmac(self.key_salt, value).hexdigest()[::2]
         return "%s-%s" % (nd_b36, hash)

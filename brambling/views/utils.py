@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from datetime import timedelta
 from functools import wraps
-from itertools import ifilter
+
 
 import pytz
 from django.core.urlresolvers import reverse
@@ -115,15 +115,15 @@ class Workflow(object):
     def __init__(self, **kwargs):
         if 'steps' in kwargs:
             raise ValueError("`steps` can't be passed as a kwarg value.")
-        for k, v in kwargs.items():
+        for k, v in list(kwargs.items()):
             setattr(self, k, v)
-        cls_iter = ifilter(lambda cls: cls.include_in(self), self.step_classes)
+        cls_iter = filter(lambda cls: cls.include_in(self), self.step_classes)
         self.steps = OrderedDict(((cls.slug, cls(self, index))
                                   for index, cls in enumerate(cls_iter)))
 
     @property
     def active_steps(self):
-        return [step for step in self.steps.values()
+        return [step for step in list(self.steps.values())
                 if step.is_active()]
 
 
@@ -142,14 +142,14 @@ class Step(object):
 
     @property
     def previous_step(self):
-        for step in reversed(self.workflow.steps.values()[:self.index]):
+        for step in reversed(list(self.workflow.steps.values())[:self.index]):
             if step.is_active():
                 return step
         return None
 
     @property
     def next_step(self):
-        for step in self.workflow.steps.values()[self.index + 1:]:
+        for step in list(self.workflow.steps.values())[self.index + 1:]:
             if step.is_active():
                 return step
         return None
@@ -196,7 +196,7 @@ class WorkflowMixin(object):
     def _reverse(self, view_name):
         return reverse(view_name, kwargs={
             key: value
-            for key, value in self.get_reverse_kwargs().items()
+            for key, value in list(self.get_reverse_kwargs().items())
             if value is not None
         })
 
@@ -209,7 +209,7 @@ class WorkflowMixin(object):
             if (not self.current_step or
                     not self.current_step.is_active() or
                     not self.current_step.is_accessible()):
-                for step in reversed(self.workflow.steps.values()):
+                for step in reversed(list(self.workflow.steps.values())):
                     if step.is_accessible() and step.is_active():
                         return HttpResponseRedirect(self._reverse(step.view_name))
         return super(WorkflowMixin, self).dispatch(request, *args, **kwargs)

@@ -15,6 +15,7 @@ from brambling.filters import FloppyFilterSet, AttendeeFilterSet, OrderFilterSet
 from brambling.models import Attendee, Order, BoughtItem, Transaction
 from brambling.templatetags.zenaida import format_money
 from brambling.utils.timezones import format_as_localtime
+from functools import reduce
 
 
 __all__ = ('ModelTable', 'AttendeeTable', 'OrderTable')
@@ -49,11 +50,11 @@ class Cell(object):
         """
 
         if self.is_iterable():
-            return u"\n".join([unicode(x) for x in self.value])
-        return unicode(self.value)
+            return "\n".join([str(x) for x in self.value])
+        return str(self.value)
 
     def __repr__(self):
-        return u"{}: {}".format(self.field, self.value)
+        return "{}: {}".format(self.field, self.value)
 
     def is_boolean(self):
         return isinstance(self.value, bool)
@@ -69,11 +70,11 @@ class Row(object):
 
     def __getitem__(self, key):
         if isinstance(key, int):
-            return Cell(*self.data.items()[key])
+            return Cell(*list(self.data.items())[key])
         return Cell(key, self.data[key])
 
     def __iter__(self):
-        for key, value in self.data.items():
+        for key, value in list(self.data.items()):
             yield Cell(key, value)
 
     def __len__(self):
@@ -131,7 +132,7 @@ class ModelTable(object):
         object_list = self.get_queryset(fields)
         return object_list.count()
 
-    def __nonzero__(self):
+    def __bool__(self):
         # Prevents infinite recursion from calling __len__ - label_for_field
         # gets called during __len__, and checks the boolean value of the
         # table.
@@ -703,26 +704,26 @@ class OrderTable(CustomDataTable):
 
     def send_flyers_full_address(self, obj):
         if obj.send_flyers:
-            return u", ".join((
+            return ", ".join((
                 obj.send_flyers_address,
                 obj.send_flyers_address_2,
                 obj.send_flyers_city,
                 obj.send_flyers_state_or_province,
                 obj.send_flyers_zip,
-                unicode(obj.send_flyers_country),
+                str(obj.send_flyers_country),
             ))
         return ''
 
     def hosting_full_address(self, obj):
         eventhousing = obj.get_eventhousing()
         if eventhousing and obj.providing_housing:
-            return u", ".join((
+            return ", ".join((
                 eventhousing.address,
                 eventhousing.address_2,
                 eventhousing.city,
                 eventhousing.state_or_province,
                 eventhousing.zip_code,
-                unicode(eventhousing.country),
+                str(eventhousing.country),
             ))
         return ''
 

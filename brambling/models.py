@@ -1,5 +1,5 @@
 # encoding: utf8
-from __future__ import unicode_literals
+
 
 from collections import OrderedDict
 from datetime import date as dtdate, timedelta
@@ -200,7 +200,7 @@ class OrganizationMember(models.Model):
         unique_together = ('organization', 'person')
 
     def __unicode__(self):
-        return u"{}: {}".format(self.organization, self.person)
+        return "{}: {}".format(self.organization, self.person)
 
 
 class Organization(models.Model):
@@ -324,7 +324,7 @@ class EventMember(models.Model):
         unique_together = ('event', 'person')
 
     def __unicode__(self):
-        return u"{}: {}: {}".format(self.event.organization, self.event, self.person)
+        return "{}: {}: {}".format(self.event.organization, self.event, self.person)
 
 
 class Event(models.Model):
@@ -498,7 +498,7 @@ class Event(models.Model):
     def get_housing_dates(self):
         return [
             self.start_date + timedelta(n - 1)
-            for n in xrange((self.end_date - self.start_date).days + 2)
+            for n in range((self.end_date - self.start_date).days + 2)
         ]
 
     def check_postmark_past(self):
@@ -720,7 +720,7 @@ class CreditCard(models.Model):
     is_saved = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return (u"{} " + u"\u2022" * 4 + u"{}").format(self.brand, self.last4)
+        return ("{} " + "\u2022" * 4 + "{}").format(self.brand, self.last4)
 
     def get_icon(self):
         return self.ICONS.get(self.brand, 'credit-card')
@@ -1037,7 +1037,7 @@ class Order(models.Model):
         total_refunds = 0
         unconfirmed_check_payments = False
 
-        for txn, txn_dict in transactions.iteritems():
+        for txn, txn_dict in transactions.items():
             gross_cost += txn_dict['gross_cost']
             total_savings += txn_dict['total_savings']
             net_cost += txn_dict['net_cost']
@@ -1308,7 +1308,7 @@ class BoughtItem(models.Model):
         ordering = ('added',)
 
     def __unicode__(self):
-        return u"{} – {} ({})".format(
+        return "{} – {} ({})".format(
             self.item_option_name,
             self.order.code,
             self.pk,
@@ -1729,7 +1729,7 @@ class CustomFormField(models.Model):
         }
         if self.field_type in self.CHOICE_TYPES:
             choices = self.choices.splitlines()
-            kwargs['choices'] = zip(choices, choices)
+            kwargs['choices'] = list(zip(choices, choices))
 
         if self.field_type == self.TEXT:
             field_class = forms.CharField

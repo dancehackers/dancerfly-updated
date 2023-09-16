@@ -73,7 +73,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         # Otherwise, you can view orders in your session.
         session_orders = Order.objects._get_session(self.request)
-        return qs.filter(code__in=session_orders.values())
+        return qs.filter(code__in=list(session_orders.values()))
 
     def create(self, request, *args, **kwargs):
         # Bypass the serializer altogether. This actually performs

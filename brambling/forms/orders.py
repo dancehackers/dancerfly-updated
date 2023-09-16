@@ -146,7 +146,7 @@ class SurveyDataForm(CustomDataForm):
             code = cleaned_data['send_flyers_zip']
             try:
                 cleaned_data['send_flyers_zip'] = clean_postal_code(country, code)
-            except ValidationError, e:
+            except ValidationError as e:
                 del cleaned_data['send_flyers_zip']
                 self.add_error('send_flyers_zip', e)
         return cleaned_data
@@ -260,7 +260,7 @@ class HostingForm(MemoModelForm, CustomDataForm):
             code = cleaned_data['zip_code']
             try:
                 cleaned_data['zip_code'] = clean_postal_code(country, code)
-            except ValidationError, e:
+            except ValidationError as e:
                 del cleaned_data['zip_code']
                 self.add_error('zip_code', e)
         return cleaned_data
@@ -338,7 +338,7 @@ class AddCardForm(forms.Form):
             token = self.cleaned_data['token']
             try:
                 self.card = self.add_card(token)
-            except stripe.error.CardError, e:
+            except stripe.error.CardError as e:
                 self.add_error(None, e.message)
 
     def add_card(self, token):
@@ -405,13 +405,13 @@ class OneTimePaymentForm(BasePaymentForm, AddCardForm):
                 else:
                     self._charge = stripe_charge(self.cleaned_data['token'], **kwargs)
                     self.card = self._charge.source
-            except stripe.error.CardError, e:
+            except stripe.error.CardError as e:
                 self.add_error(None, e.message)
-            except stripe.error.APIError, e:
+            except stripe.error.APIError as e:
                 self.add_error(None, STRIPE_API_ERROR)
-            except stripe.error.InvalidRequestError, e:
+            except stripe.error.InvalidRequestError as e:
                 self.add_error(None, e.message)
-            except InvalidAmountException, e:
+            except InvalidAmountException as e:
                 self.add_error(None, e.message)
 
     def save(self):
@@ -449,13 +449,13 @@ class SavedCardPaymentForm(BasePaymentForm):
                 order=self.order,
                 customer=customer_id
             )
-        except stripe.error.CardError, e:
+        except stripe.error.CardError as e:
             self.add_error(None, e.message)
-        except stripe.error.APIError, e:
+        except stripe.error.APIError as e:
             self.add_error(None, STRIPE_API_ERROR)
-        except stripe.error.InvalidRequestError, e:
+        except stripe.error.InvalidRequestError as e:
             self.add_error(None, e.message)
-        except InvalidAmountException, e:
+        except InvalidAmountException as e:
             self.add_error(None, e.message)
 
     def save(self):

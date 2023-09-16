@@ -418,14 +418,14 @@ class OrderModelTestCase(TestCase):
         self.assertEqual(summary_data['unconfirmed_check_payments'], False)
         transactions = summary_data['transactions']
         self.assertEqual(len(transactions), 2)
-        transfer_txn, transfer_txn_dict = transactions.items()[0]
+        transfer_txn, transfer_txn_dict = list(transactions.items())[0]
         self.assertEqual(transfer_txn.transaction_type, Transaction.TRANSFER)
         self.assertEqual(transfer_txn_dict['items'], [bought_item])
         self.assertEqual(transfer_txn_dict['gross_cost'], 0)
         self.assertEqual(transfer_txn_dict['discounts'], [])
         self.assertEqual(transfer_txn_dict['total_savings'], 0)
         self.assertEqual(transfer_txn_dict['net_cost'], 0)
-        purchase_txn, purchase_txn_dict = transactions.items()[1]
+        purchase_txn, purchase_txn_dict = list(transactions.items())[1]
         self.assertEqual(purchase_txn.transaction_type, Transaction.PURCHASE)
         self.assertEqual(purchase_txn_dict['items'], [bought_item])
         self.assertEqual(purchase_txn_dict['gross_cost'], 100)
@@ -444,7 +444,7 @@ class OrderModelTestCase(TestCase):
         self.assertEqual(summary_data2['unconfirmed_check_payments'], False)
         transactions2 = summary_data2['transactions']
         self.assertEqual(len(transactions2), 1)
-        transfer_txn2, transfer_txn2_dict = transactions.items()[0]
+        transfer_txn2, transfer_txn2_dict = list(transactions.items())[0]
         self.assertEqual(transfer_txn2.transaction_type, Transaction.TRANSFER)
         self.assertEqual(transfer_txn2_dict['items'], [bought_item])
         self.assertEqual(transfer_txn2_dict['gross_cost'], 0)

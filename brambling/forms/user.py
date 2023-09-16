@@ -175,7 +175,7 @@ class HomeForm(forms.ModelForm):
             code = cleaned_data['zip_code']
             try:
                 cleaned_data['zip_code'] = clean_postal_code(country, code)
-            except ValidationError, e:
+            except ValidationError as e:
                 del cleaned_data['zip_code']
                 self.add_error('zip_code', e)
         return cleaned_data

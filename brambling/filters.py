@@ -23,7 +23,7 @@ class BoughtItemStatusFilter(django_filters.BooleanFilter):
     def __init__(self, status, prefix='', *args, **kwargs):
         self.status = status
         self.prefix = prefix
-        self.suffix = '__exact' if isinstance(status, basestring) else '__in'
+        self.suffix = '__exact' if isinstance(status, str) else '__in'
         super(BoughtItemStatusFilter, self).__init__(status)
 
     def filter(self, qs, value):
@@ -61,7 +61,7 @@ class FloppyFilterSet(django_filters.FilterSet):
                 # add asc and desc field names
                 # use the filter's label if provided
                 choices = []
-                for f, fltr in self.filters.items():
+                for f, fltr in list(self.filters.items()):
                     choices.extend([
                         (fltr.name or f, fltr.label or pretty_name(f)),
                         ("-%s" % (fltr.name or f), _('%s (descending)' % (fltr.label or pretty_name(f))))

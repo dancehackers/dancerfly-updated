@@ -85,7 +85,7 @@ class OrganizationPaymentForm(forms.ModelForm):
             code = cleaned_data['check_zip']
             try:
                 cleaned_data['check_zip'] = clean_postal_code(country, code)
-            except ValidationError, e:
+            except ValidationError as e:
                 del cleaned_data['check_zip']
                 self.add_error('check_zip', e)
         return cleaned_data

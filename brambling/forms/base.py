@@ -25,7 +25,7 @@ class MemoModelForm(forms.ModelForm):
 
     def get(self, model_or_qs, **kwargs):
         model, qs = self._model_and_qs(model_or_qs)
-        key = frozenset(['get', model] + [item for item in kwargs.items()])
+        key = frozenset(['get', model] + [item for item in list(kwargs.items())])
         if key not in self.memo_dict:
             try:
                 self.memo_dict[key] = qs.get(**kwargs)
@@ -38,7 +38,7 @@ class MemoModelForm(forms.ModelForm):
 
     def filter(self, model_or_qs, **kwargs):
         model, qs = self._model_and_qs(model_or_qs)
-        key = frozenset(['filter', model] + [item for item in kwargs.items()])
+        key = frozenset(['filter', model] + [item for item in list(kwargs.items())])
         if key not in self.memo_dict:
             self.memo_dict[key] = qs.filter(**kwargs)
         return self.memo_dict[key]
@@ -130,7 +130,7 @@ class GroupedModelChoiceIterator(ModelChoiceIterator):
 
     def __iter__(self):
         if self.field.empty_label is not None:
-            yield (u"", self.field.empty_label)
+            yield ("", self.field.empty_label)
         for group, choices in groupby(
             self.queryset.order_by(self.field.group_by_field),
             key=lambda row: getattr(row, self.field.group_by_field),

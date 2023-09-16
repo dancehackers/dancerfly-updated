@@ -100,7 +100,7 @@ class BoughtItemViewSet(viewsets.ModelViewSet):
 
         # Otherwise, you can view for orders in your session.
         session_orders = Order.objects._get_session(self.request)
-        return qs.filter(order__code__in=session_orders.values())
+        return qs.filter(order__code__in=list(session_orders.values()))
 
     def perform_destroy(self, instance):
         order = instance.order

@@ -1042,7 +1042,7 @@ class ModelTableView(ListView):
             table = context['table']
             pseudo_buffer = Echo()
             writer = csv.writer(pseudo_buffer)
-            response = StreamingHttpResponse((writer.writerow([unicode(cell) for cell in row])
+            response = StreamingHttpResponse((writer.writerow([str(cell) for cell in row])
                                               for row in itertools.chain((table.header_row(),), table)),
                                              content_type="text/csv")
             response['Content-Disposition'] = 'attachment; filename="export.csv"'
@@ -1055,7 +1055,7 @@ class ModelTableView(ListView):
             ws.title = 'Data'
             for i, row in enumerate(all_rows):
                 for j, cell in enumerate(row):
-                    ws.cell(row=i + 1, column=j + 1, value=unicode(cell))
+                    ws.cell(row=i + 1, column=j + 1, value=str(cell))
             response = StreamingHttpResponse(
                 save_virtual_workbook(wb),
                 content_type='application/vnd.ms-excel')
@@ -1413,7 +1413,7 @@ class FinancesView(ListView):
 
             pseudo_buffer = Echo()
             writer = csv.writer(pseudo_buffer)
-            response = StreamingHttpResponse((writer.writerow([unicode(cell.value) for cell in row])
+            response = StreamingHttpResponse((writer.writerow([str(cell.value) for cell in row])
                                               for row in table.get_rows(include_headers=True)),
                                              content_type="text/csv")
             response['Content-Disposition'] = 'attachment; filename="finances.csv"'
@@ -1426,7 +1426,7 @@ class FinancesView(ListView):
             ws.title = 'Finances'
             for i, row in enumerate(table.get_rows(include_headers=True)):
                 for j, cell in enumerate(row):
-                    ws.cell(row=i + 1, column=j + 1, value=unicode(cell.value))
+                    ws.cell(row=i + 1, column=j + 1, value=str(cell.value))
             response = StreamingHttpResponse(
                 save_virtual_workbook(wb),
                 content_type='application/vnd.ms-excel')

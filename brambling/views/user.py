@@ -36,7 +36,7 @@ class SignUpView(CreateView):
         initial = super(SignUpView, self).get_initial()
         initial = initial.copy()
         blacklist = ['password1', 'password2']
-        for key, value in self.request.GET.iteritems():
+        for key, value in self.request.GET.items():
             if key in blacklist:
                 continue
             initial[key] = value

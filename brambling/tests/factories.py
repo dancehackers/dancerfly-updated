@@ -168,7 +168,7 @@ class DiscountFactory(factory.DjangoModelFactory):
         model = Discount
 
     name = factory.Sequence(lambda n: "Discount {}".format(n))
-    code = factory.Sequence(lambda n: unicode(n))
+    code = factory.Sequence(lambda n: str(n))
     available_end = now() + timedelta(days=2)
     amount = 1
     event = factory.SubFactory(EventFactory)

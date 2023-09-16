@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 import warnings
 
 from django.db import migrations
@@ -37,7 +37,7 @@ def set_stripe_metadata(apps, schema_editor):
                 'event': event.name,
             }
             remote.save()
-        except stripe.InvalidRequestError, e:
+        except stripe.InvalidRequestError as e:
             warnings.warn("Updating metadata failed: {}".format(e.message))
 
 
